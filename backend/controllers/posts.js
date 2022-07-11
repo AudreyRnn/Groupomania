@@ -2,7 +2,7 @@
 const Post = require("../models/post");
 const fs = require("fs"); // package  file système
 
-//création d'une sauce
+//création d'un post
 exports.createPost = (req, res, next) => {
   const postObject = JSON.parse(req.body.post);
   delete postObject._id; // suppression du faux id envoyé par le frontend
@@ -21,11 +21,11 @@ exports.createPost = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
-//modification d'une sauce
+//modification d'un post
 exports.modifyPost = (req, res, next) => {
   // si req.file présent
   if (req.file) {
-    // récupération de la sauce dans la bdd
+    // récupération du post dans la bdd
     Post.findOne({ _id: req.params.id })
       .then((post) => {
         // récupération du fichier image à supprimer
@@ -50,14 +50,14 @@ exports.modifyPost = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
-// supprimer une sauce
+// supprimer un post
 exports.deletePost = (req, res, next) => {
   Post.findOne({ _id: req.params.id }) // trouver objet ds bdd
     .then((post) => {
       if (!post) {
         return res.status(404).json({ error: "requête non autorisée!" });
       }
-      //Verification que la sauce appartient à l'user
+      //Verification que le post appartient à l'user
       if (post.userId !== req.auth.userId) {
         return res.status(401).json({
           error: "Requête non autorisée",
@@ -74,21 +74,21 @@ exports.deletePost = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-// affichage toutes les sauces
+// affichage tous les posts
 exports.getAllPosts = (req, res, next) => {
   Post.find()
     .then((posts) => res.status(200).json(posts))
     .catch((error) => res.status(400).json({ error }));
 };
 
-// affichage d'une sauce
+// affichage d'un post
 exports.getOnePost = (req, res, next) => {
   Post.findOne({ _id: req.params.id }) //trouver l'objet unique ayant le même id que le paramètre de la recherche
     .then((sauces) => res.status(200).json(sauces))
     .catch((error) => res.status(404).json({ error }));
 };
 
-// Like ou dislike une sauce
+// Liker un post 
 exports.likePost = (req, res, next) => {
   Post.findOne({ _id: req.params.id })
     .then((post) => {
