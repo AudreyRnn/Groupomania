@@ -16,6 +16,7 @@ exports.signup = (req, res, next) => {
       const user = new User({
         email: req.body.email,
         password: hash,
+        username:req.body.username
       });
 
       // utilisation d'une regEx pour vérifier que l'input complété comprend un email valide
