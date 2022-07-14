@@ -4,7 +4,9 @@ const fs = require("fs"); // package  file système
 
 //création d'un post
 exports.createPost = (req, res, next) => {
+  console.log(req.body.post);
   const postObject = JSON.parse(req.body.post);
+  console.log(postObject);
   delete postObject._id; // suppression du faux id envoyé par le frontend
   const post = new Post({
     ...postObject,
@@ -17,7 +19,7 @@ exports.createPost = (req, res, next) => {
   //enregistrement en BDD
   post
     .save()
-    .then(() => res.status(201).json({ message: "objet enregistré!" }))
+    .then(() => res.status(201).json({ message: "nouveau post crée!" }))
     .catch((error) => res.status(400).json({ error }));
 };
 
@@ -57,7 +59,7 @@ exports.deletePost = (req, res, next) => {
       if (!post) {
         return res.status(404).json({ error: "requête non autorisée!" });
       }
-      //Verification que le post appartient à l'user
+      //Verification que le post appartient à l'user ou que c'est l'admin qui supprime
       if (post.userId !== req.auth.userId) {
         return res.status(401).json({
           error: "Requête non autorisée",
@@ -88,13 +90,13 @@ exports.getOnePost = (req, res, next) => {
     .catch((error) => res.status(404).json({ error }));
 };
 
-// Liker un post 
+// Liker un post
 exports.likePost = (req, res, next) => {
   Post.findOne({ _id: req.params.id })
     .then((post) => {
       // Si le user n'a pas encore fait de choix
       if (post.usersLiked.indexOf(req.body.userId) == -1) {
-        //Le user aime la sauce
+        //Le user aime le post
         if (req.body.like == 1) {
           post.usersLiked.push(req.body.userId);
           post.likes += req.body.like;

@@ -33,7 +33,7 @@ app.use(cors({ origin: "http://localhost:4200" }));
 
 // Accès principaux
 app.use("/images", express.static(path.join(__dirname, "images")));
-app.use("/api/Posts", postRoutes);
+app.use("/api/posts", postRoutes);
 app.use("/api/auth", userRoutes);
 
 module.exports = app;

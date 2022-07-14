@@ -7,19 +7,19 @@ const multer = require("../middleware/multer-config");
 //creation du router
 const router = express.Router();
 
-//création d'une sauce (create)
+//création d'un post (create)
 router.post("/", auth, multer, postCtrl.createPost);
 
-//récupérer toutes les sauces (read)
+//récupérer tous les posts (read)
 router.get("/", auth, postCtrl.getAllPosts);
 
-// récupérer une seule sauce d'après son id (read)
+// récupérer un post d'après son id (read)
 router.get("/:id", auth, postCtrl.getOnePost);
 
-// mettre à jour une sauce (update)
+// mettre à jour un post(update)
 router.put("/:id", auth, multer, postCtrl.modifyPost);
 
-// supression d'une sauce (delete)
+// supression d'un post (delete)
 router.delete("/:id", auth, postCtrl.deletePost);
 
 // Gestion des likes et dislikes
