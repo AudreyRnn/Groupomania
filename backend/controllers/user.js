@@ -59,7 +59,8 @@ exports.login = (req, res, next) => {
             return res.status(401).json({ error: "Mot de passe incorrect" });
           }
           res.status(200).json({
-            userId: user._id, // si user trouvé on demande à renvoyer l'identifiant de l'utilisateur ds la base
+            userId: user._id,
+            role: user.role, // si user trouvé on demande à renvoyer l'identifiant de l'utilisateur ds la base
             token: jwt.sign({ userId: user._id }, process.env.SECRET_TOKEN, {
               expiresIn: "24h",
             }),
