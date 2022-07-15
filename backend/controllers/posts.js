@@ -1,7 +1,7 @@
 // imports
 const Post = require("../models/post");
 const fs = require("fs"); // package  file système
-const User =  require("../models/User")
+const User = require("../models/User");
 
 //création d'un post
 exports.createPost = (req, res, next) => {
@@ -24,40 +24,44 @@ exports.createPost = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
-//modification d'un post
-exports.modifyPost = (req, res, next) => {
+// //modification d'un post
 
-  // si req.file présent
-  if (req.file) {
-    // récupération du post dans la bdd
-    Post.findOne({ _id: req.params.id })
-      .then((post) => {
-        // récupération du fichier image à supprimer
-        const filename = post.imageUrl.split("/images/")[1];
-        //suppression du fichier image dans le dossier du serveur
-        fs.unlink(`images/${filename}`, (err) => {
-          if (err) throw err;
-        });
-      })
-      .catch((error) => res.status(400).json({ error }));
-  }
-  const postObject = req.file // si req.file existe on traite la nouvelle image, sinon on traite l'objet entrant
-    ? {
+exports.modifyPost = (req, res, next) => {
+  User.findOne({ _id: req.auth.userId }).then((user) => {
+    Post.findOne({ _id: req.params.id }).then((post) => {
+      if (post.userId == user._id || user.role == "admin") {
+        const postObject = req.file
+          ? {
         ...JSON.parse(req.body.post),
         imageUrl: `${req.protocol}://${req.get("host")}/images/${
           req.file.filename
         }`,
       }
-    : { ...req.body };
-  Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
-    .then(() => res.status(200).json({ message: "objet modifié" }))
-    .catch((error) => res.status(400).json({ error }));
+          : { ...req.body };
+
+        Post.findByIdAndUpdate({ _id: req.params.id }, { ...postObject, _id: req.params.id })
+
+          .then((post) => {
+            if (req.file) {
+              const filename = post.imageUrl.split("/images/")[1];
+              fs.unlink(`images/${filename}`, () => {
+                res.status(200).json({ message: "Post modifié avec succès !" });
+              });
+            }
+          })
+          .catch((error) => res.status(400).json({ error }));
+      } else {
+        res
+          .status(401)
+          .json({ message: "Seuls le créateur du post ou un administrateur peuvent modifier les posts" });
+      }
+    });
+  });
 };
 
 // supprimer un post
 
 exports.deletePost = (req, res, next) => {
-
   User.findOne({ _id: req.auth.userId }).then((user) => {
     Post.findOne({ _id: req.params.id })
       .then((post) => {
@@ -72,13 +76,14 @@ exports.deletePost = (req, res, next) => {
         } else {
           res
             .status(401)
-            .json({ message: "Ce post doit être supprimé par son auteur ou un adminsitrateur" });
+            .json({
+              message: "Ce post doit être supprimé par son auteur ou un",
+            });
         }
       })
       .catch((error) => res.status(500).json({ error }));
   });
 };
-
 
 // affichage tous les posts
 exports.getAllPosts = (req, res, next) => {
