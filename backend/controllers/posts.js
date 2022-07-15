@@ -1,6 +1,7 @@
 // imports
 const Post = require("../models/post");
 const fs = require("fs"); // package  file système
+const User =  require("../models/User")
 
 //création d'un post
 exports.createPost = (req, res, next) => {
@@ -25,6 +26,7 @@ exports.createPost = (req, res, next) => {
 
 //modification d'un post
 exports.modifyPost = (req, res, next) => {
+
   // si req.file présent
   if (req.file) {
     // récupération du post dans la bdd
@@ -53,28 +55,30 @@ exports.modifyPost = (req, res, next) => {
 };
 
 // supprimer un post
+
 exports.deletePost = (req, res, next) => {
-  Post.findOne({ _id: req.params.id }) // trouver objet ds bdd
-    .then((post) => {
-      if (!post) {
-        return res.status(404).json({ error: "requête non autorisée!" });
-      }
-      //Verification que le post appartient à l'user ou que c'est l'admin qui supprime
-      if (post.userId !== req.auth.userId) {
-        return res.status(401).json({
-          error: "Requête non autorisée",
-        });
-      }
-      const filename = post.imageUrl.split("/images/")[1]; // on extraie nom du fichier à supprimer
-      // supression du fichier fs.unlink
-      fs.unlink(`images/${filename}`, () => {
-        Post.deleteOne({ _id: req.params.id }) // ensuite supression de l'objet de la base
-          .then(() => res.status(200).json({ message: "Objet supprimé !" }))
-          .catch((error) => res.status(400).json({ error }));
-      });
-    })
-    .catch((error) => res.status(500).json({ error }));
+
+  User.findOne({ _id: req.auth.userId }).then((user) => {
+    Post.findOne({ _id: req.params.id })
+      .then((post) => {
+        if (post.userId == user._id || user.role == "admin") {
+          const filename = post.imageUrl.split("/images/")[1];
+
+          fs.unlink(`images/${filename}`, () => {
+            Post.deleteOne({ _id: req.params.id })
+              .then(() => res.status(200).json({ message: "Post supprimé !" }))
+              .catch((error) => res.status(400).json({ error }));
+          });
+        } else {
+          res
+            .status(401)
+            .json({ message: "Ce post doit être supprimé par son auteur ou un adminsitrateur" });
+        }
+      })
+      .catch((error) => res.status(500).json({ error }));
+  });
 };
+
 
 // affichage tous les posts
 exports.getAllPosts = (req, res, next) => {
