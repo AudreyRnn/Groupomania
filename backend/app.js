@@ -29,7 +29,7 @@ app.use(express.json());
 app.use(helmet.crossOriginResourcePolicy({ policy: "same-site" }));
 
 // utilisation de cors pour limiter les erreurs
-app.use(cors({ origin: "http://localhost:4200" }));
+app.use(cors({ origin: "http://localhost:8080" }));
 
 // Accès principaux
 app.use("/images", express.static(path.join(__dirname, "images")));
