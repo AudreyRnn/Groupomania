@@ -90,7 +90,7 @@ const store = createStore({
       });
     },
     getUserInfos: ({commit}) => {
-      instance.post('/infos')
+      instance.post('/')
       .then(function (response) {
         commit('userInfos', response.data.infos);
       })

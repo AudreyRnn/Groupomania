@@ -9,7 +9,7 @@ import loginCompo from "@/components/loginCompo.vue";
 import headerCompo from "@/components/headerCompo.vue";
 
 export default {
-    name: 'connexion',
+    name: 'Login',
     components :{
         loginCompo,
         headerCompo,

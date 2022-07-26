@@ -15,7 +15,7 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-  name: 'Profile',
+  name: 'Home',
   mounted: function () {
     console.log(this.$store.state.user);
     if (this.$store.state.user.userId == -1) {
@@ -32,7 +32,7 @@ export default {
   methods: {
     logout: function () {
       this.$store.commit('logout');
-      this.$router.push('/');
+      this.$router.push('/login');
     }
   }
 }
