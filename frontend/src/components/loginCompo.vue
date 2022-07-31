@@ -34,9 +34,10 @@
   </div>
   </div>
 </template>
+
 <script>
 
-import { mapState } from 'vuex'
+import { mapState } from 'vuex' ;
 
 export default {
   name: 'loginCompo',
@@ -108,7 +109,7 @@ export default {
 
 <style lang="scss">
 
-@import '../assets/_base.scss';
+@import '../assets/sass/base';
 
 .connexion {
   display: flex;

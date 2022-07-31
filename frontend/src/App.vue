@@ -13,6 +13,6 @@ export default {
 
 <style lang="scss">
 
-@import "./assets/_base.scss"; 
+@import "./assets/sass/base"; 
 
 </style>

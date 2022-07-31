@@ -34,11 +34,11 @@ $error-color: #b70000;
 
 #app {
   max-width: 100%;
-width: 100%;
+  width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction:column;
-  gap:200px;
+  gap:50px;
 }
 
 body {
@@ -48,5 +48,6 @@ body {
   min-height: 100vh;
   display: flex;
   height: 100%;
+  color:$tertiary-color;
     
 }

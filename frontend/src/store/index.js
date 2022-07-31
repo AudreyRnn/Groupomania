@@ -1,11 +1,11 @@
 import { createStore } from 'vuex'
 
 const axios = require('axios');
-
 const instance = axios.create({
   baseURL: 'http://localhost:3000/api/'
 });
 
+// Récupérer user dans le local storage
 let user = localStorage.getItem('user');
 if (!user) {
  user = {
@@ -37,6 +37,7 @@ const store = createStore({
       email: '',
       
     },
+    
   },
   mutations: {
     setStatus: function (state, status) {
@@ -50,6 +51,7 @@ const store = createStore({
     userInfos: function (state, userInfos) {
       state.userInfos = userInfos;
     },
+    
     logout: function (state) {
       state.user = {
         userId: -1,
@@ -57,6 +59,7 @@ const store = createStore({
       }
       localStorage.removeItem('user');
     }
+    
   },
   actions: {
     login: ({commit}, userInfos) => {
@@ -89,14 +92,7 @@ const store = createStore({
         });
       });
     },
-    getUserInfos: ({commit}) => {
-      instance.post('/')
-      .then(function (response) {
-        commit('userInfos', response.data.infos);
-      })
-      .catch(function () {
-      });
-    }
+  
   }
 })
 export default store;

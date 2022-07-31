@@ -1,43 +1,34 @@
 <template>
-  <div class="card">
-    <h1 class="card__title">Espace Perso</h1>
-    <p class="card__subtitle">Voilà donc qui je suis...</p>
-    <p>{{user.prenom}} {{user.nom}} {{user.email}}</p>
-    <img :src="user.photo"/>
-    <div class="form-row">
-      <button @click="logout()" class="button">
-        Déconnexion
-      </button>
-    </div>
-  </div>
+ 
+  <headerCompo />
+  <createPost />
+  <postslist />
+
+
 </template>
 
 <script>
-import { mapState } from 'vuex'
+
+
+import headerCompo from "@/components/headerCompo.vue";
+import createPost from "@/components/createPost.vue";
+import postslist from "@/components/postslist.vue";
+
+
 export default {
   name: 'Home',
-  mounted: function () {
-    console.log(this.$store.state.user);
-    if (this.$store.state.user.userId == -1) {
-      this.$router.push('/');
-      return ;
-    }
-    this.$store.dispatch('getUserInfos');
-  },
-  computed: {
-    ...mapState({
-      user: 'userInfos',
-    })
-  },
-  methods: {
-    logout: function () {
-      this.$store.commit('logout');
-      this.$router.push('/login');
-    }
+  components: {
+    headerCompo,
+    createPost,
+    postslist,
+    
+    
   }
 }
+  
 </script>
 
-<style scoped>
+<style lang="scss">
 
-</style>>
+
+</style>
