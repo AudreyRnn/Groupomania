@@ -13,6 +13,7 @@ exports.createPost = (req, res, next) => {
     ...postObject,
     likes: 0,
     usersliked: [],
+    // username,
     imageUrl: `${req.protocol}://${req.get("host")}/images/${
       req.file.filename
     }`,
