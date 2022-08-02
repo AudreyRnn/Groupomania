@@ -1,145 +1,120 @@
 <template>
-<section class="post__create">
-    <div class="postscard postscard__create">
-        <h1 class="postscard__title">Ajouter un post</h1>
+  <section class="post">
+    <div class="postscard create">
+      <h1 class="postscard__title">Ajouter un post <fa icon="coffee" /></h1>
 
-        <form method="post" id="form__add">
-            <div class="form-row">
-                <label for="message"></label>
-                <input 
-                    v-model="descriptionPost.message" 
-                    id="message" 
-                    class="form-row__input" 
-                    type="textarea"
-                    placeholder="Votre message ici"
-                />
-            </div>
+      <form method="post" id="form__add">
+        <div class="form-row">
+          <textarea
+            aria-label="message de l'utilisateur"
+            v-model="message"
+            id="message"
+            class="form-row__input"
+            type="text"
+            placeholder="Votre message ici"
+                
+          />
+        </div>
 
-            <div class="form-row">
-                <input 
-                    type="file" 
-                    @change=fileSelected()
-                    id="image"
-                    name="image"
-                    ref="image" 
-                    class="post-file" />
-                <label for="image">
-                    <span class="material-icons">add_photo_alternate</span>
-                </label>
+        <input
+          aria-label="image à publier"
+          type="file"
+          @change="fileSelected()"
+          id="file"
+          name="file"
+          ref="file"
+          accept=".jpg, .jpeg, .png"
+          class="postscard__img"
+        />
 
-            </div>
-
-            
-        <button @click.prevent="createPost()" class="button" :class="{'button--disabled' : !validatedFields}">
-          <span v-if="status == 'loading'">envoi du message...</span>
-          <span v-else>Envoyer</span>
+        <button @click="createPost()" class="button" type="submit">
+          Créer Post
         </button>
-           
-        </form>
-
+      </form>
     </div>
   </section>
-
 </template>
 
-
 <script>
-
-import axios from 'axios';
-import { mapState } from 'vuex';
+import axios from "axios";
 
 export default {
-  name: 'CreatePost',
+  name: "createPost",
+  components: {},
   data() {
     return {
-      descriptionPost: {
-        message: null,
-        image: null
-      },
-      messagError: '',
-      post: '',
-      imagePost: {
-        image: null
-      }
+      message: "",
+      imageUrl: "",
+      likes: "",
+      usersLiked: "",
+      errorMsg: "",
     };
   },
-   computed: {
-    validatedFields: function () {
-      if (this.post == 'createPost') {
-        if (this.post != "") {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        if (this.post == "") {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    },
-    ...mapState(['status', ])
+  mounted() {
+    if (localStorage.userId) {
+      this.userId = localStorage.userId;
+    }
+    if (localStorage.username) {
+      this.username = localStorage.username;
+    }
   },
 
   methods: {
-  //   onFileSelected() {
-  //       this.post.image = this.$refs.image.files[0];
-  //   },
-  //   onUpload() {
-  //       const formData = new FormData();
-  //       let newDate =  Date.now();
+    
 
-  //       formData.append("userId", this.user.userId);
-  //       formData.append("userName", this.user.userName);
-  //       formData.append("description", this.post.description);
-  //       formData.append("image", this.post.image);
-  //       formData.append("date", newDate);
-
-        
-	// },
-    createPost() {
-        let dataStorage = JSON.parse(localStorage.getItem("user"));
-        let token = dataStorage.token;
-        let userId = dataStorage.userId;
-
-    const formData = new FormData();
-    formData.append ("message", this.descriptionPost.message);
-    formData.append ("userId", userId);
-    formData.append ("image", this.descriptionPost.image);
-
-    axios
-    .post ("http://localhost:3000/api/posts", formData, {
-        headers:{
-            Authorization: 'Bearer ' + token
-        }
-    })
-    .then(response=> {
-        if(response) {
-            window.location.reload();
-        }
-    })
-.catch (error => (this.messagError = error));
+    fileSelected() {
+      this.file = this.$refs.file.files[0];
+      this.newImage = URL.createObjectURL(this.file);
     },
-fileSelected() {
-    this.descriptionPost.image = this.$refs.image.files[0];
-}
-} 
-}
 
+    createPost() {
+      if (this.message !== "") {
+        console.log("champ completé");
+        this.errorMsg = "";
+
+        const user = JSON.parse(localStorage.getItem("user"));
+        const AccessToken = user.token;
+        const header = { headers: { Authorization: "Bearer " + AccessToken , } };
+        
+        const postForm = new FormData();
+        postForm.append ("message", this.message);
+        postForm.append ("image", this.file);
+        postForm.append ("userId", this.userId);
+        postForm.append ("likes", 0);
+        postForm.apprend ("userliked", [])
+
+        axios
+          .post("http://localhost:3000/api/posts/", postForm, header)
+          .then(function (response) {
+            // this.$touter.push("/home");
+            console.log(response);
+          })
+        .catch((error) => {
+          console.log(error.response.data)
+        })
+        
+      }
+      else {
+        this.errorMsg = "Merci d'insérer un post et une image"
+      }
+    },
+  },
+};
 </script>
 
+<style scoped lang="scss">
+@import "../assets/sass/base";
 
-<style  scoped lang="scss">
-@import '../assets/sass/base';
-
-.postscard__create{
-  border:none,
+.post {
+  display: flex;
+  justify-content: center;
+  margin: 15px;
 }
-.post__create {
-display: flex;
-justify-content: center;
-margin: 15px;
+.create {
+  border: none;
 }
-
+.button--disabled {
+  background: #cecece;
+  color: #ececec;
+}
 </style>

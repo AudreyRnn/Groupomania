@@ -7,20 +7,17 @@
       <!--  -->
         <header class="postscard__header">
             <div class="postscard__title">{{ post.username }}</div>
-            <div class="postscard__time">{{ post.date}} date time</div>
+            <div class="postscard__time">{{ post.date}}</div>
         </header>
         <div class="postscard__body">
            <p> <img class="postscard__img " :src="post.imageUrl" alt="image postée " /></p>
-            <p class="postscard__message">{{ post.message }} message de l'utilisateur </p>
+            <p class="postscard__message">{{ post.message }} </p>
         </div>
         <!-- bouton like à gérer une fois icones import -->
       <footer class = "postscard__footer">
-        <button class="heart-button">
-            <!-- <font-awesome-icon icon="fa-solid fa-heart"
-            v-if="checkIfUsersLiked(post)"
-            @click="likePost(post)" class="card__icon3"/> -->
-          </button>                    
-    <div class="postscard__footer_like"> insérer le like {{post.likes}}</div>
+                 
+    <div class="postscard__footer_like"> <fa icon="thumbs-up"/> <!-- v-if="checkIfUsersLiked(post)"
+            @click="likePost(post)" /> -->{{post.likes}}</div>
 
     <!-- si user ok ou user admin proposer modification du post -->
       <div class="icon" v-if="userId == post.userId || isAdmin" >
@@ -37,10 +34,6 @@
 <script>
 
 import axios from 'axios';
-
-
-
-
 
 export default {
     name:'postslist',
@@ -85,6 +78,8 @@ methods: {
         })
         .catch((error) => console.log(error));
     },
+
+    
 }
 }
 
@@ -98,8 +93,8 @@ methods: {
   display: flex;
   gap:30px;
   flex-direction: column;
-  
-  max-width: 630px;
+  justify-content: center;
+  align-items: center;
  
 
 }
