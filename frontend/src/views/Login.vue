@@ -27,6 +27,7 @@ export default {
 .welcome {
     display: flex;
     justify-content: center;
+    
     &__title{ 
     font-size: 22px;
     margin:15px}

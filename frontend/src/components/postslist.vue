@@ -17,14 +17,17 @@
       <footer class = "postscard__footer">
                  
     <div class="postscard__footer_like"> <fa icon="thumbs-up"/> <!-- v-if="checkIfUsersLiked(post)"
-            @click="likePost(post)" /> -->{{post.likes}}</div>
+            @click="likePost(post)" /> -->
+            {{post.likes}}</div>
 
-    <!-- si user ok ou user admin proposer modification du post -->
-      <div class="icon" v-if="userId == post.userId || isAdmin" >
+    <!-- si user ok ou user admin proposer modification ou supression du post -->
+      <!-- <div class="icons" v-if="post.userId == user || user.role == admin" > -->
+     
+
       <!--<router-link>
         router link à créer pour edit/modifier delete post 
       </div>router-link-->
-    </div>
+    <!-- </div> -->
     </footer>
     </article>
 
@@ -35,6 +38,7 @@
 
 import axios from 'axios';
 
+
 export default {
     name:'postslist',
     component: {},
@@ -42,11 +46,13 @@ export default {
     data: function() {
     return {
       userId:'',
-      isAdmin:'',
+      role:'',
       username:'',
       posts:'',
       post:'',
       likes: '',
+      usersliked:'',
+      
     };
 },
 
@@ -55,13 +61,16 @@ methods: {
   getUserName(){
     const user = JSON.parse(localStorage.getItem('user'));
     this.username = user.username;
+    console.log (this.username)
   },
  //obtenir l'user Id depuis le LS 
  getUserId() {
   const user = JSON.parse(localStorage.getItem ('user'));
   this.userId = user.userId
+  console.log (this.userId)
  },
 
+// affichage de tous les posts 
  getAllPosts() {
       const user = JSON.parse(localStorage.getItem('user'));
       const AccessToken = user.token;
@@ -79,7 +88,30 @@ methods: {
         .catch((error) => console.log(error));
     },
 
-    
+    // supression d'un post 
+
+// deletePost(post) {
+//   const user = JSON.parse(localStorage.getItem('user'));
+//   const AccessToken = user.token;
+
+// const header = { headers: { Authorization: 'Bearer ' + AccessToken } };
+
+// axios 
+// .delete('http://localhost:3000/api/posts/' +post._id, header )
+// .then ((response) =>{
+//   console.log('deletePost response');
+//   console.log(response.data.post);
+// })
+// .then (() => {
+//   this.getAllPosts();
+// })
+// .catch((error) =>{
+//   console.log('error deletePost');
+//   console.log(error);
+// });
+// },
+
+
 }
 }
 

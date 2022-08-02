@@ -1,9 +1,9 @@
 <template>
   <section class="post">
     <div class="postscard create">
-      <h1 class="postscard__title">Ajouter un post <fa icon="coffee" /></h1>
+      <h1 class="postscard__title">Ajouter un post <fa icon="pen-to-square" /></h1>
 
-      <form method="post" id="form__add">
+      <!-- <form method="post" id="form__add"> -->
         <div class="form-row">
           <textarea
             aria-label="message de l'utilisateur"
@@ -27,10 +27,10 @@
           class="postscard__img"
         />
 
-        <button @click="createPost()" class="button" type="submit">
+        <button @click.prevent="createPost()" class="button" type="submit">
           Créer Post
         </button>
-      </form>
+      <!-- </form> -->
     </div>
   </section>
 </template>
@@ -50,18 +50,18 @@ export default {
       errorMsg: "",
     };
   },
+  // récupérer les données dans le localstrorage 
   mounted() {
-    if (localStorage.userId) {
-      this.userId = localStorage.userId;
+    if (JSON.parse(localStorage.getItem ("user")).userId) {
+      this.userId = JSON.parse(localStorage.getItem ("user")).userId;
     }
-    if (localStorage.username) {
-      this.username = localStorage.username;
+    if (JSON.parse(localStorage.getItem ("user")).username) {
+      this.username = JSON.parse(localStorage.getItem ("user")).username;
     }
   },
 
   methods: {
     
-
     fileSelected() {
       this.file = this.$refs.file.files[0];
       this.newImage = URL.createObjectURL(this.file);
@@ -74,14 +74,27 @@ export default {
 
         const user = JSON.parse(localStorage.getItem("user"));
         const AccessToken = user.token;
-        const header = { headers: { Authorization: "Bearer " + AccessToken , } };
+        const header = { headers: { 
+          "Content-Type": "multipart/form-data",
+          authorization: "Bearer " + AccessToken , } };
+        console.log(this.message)
+        console.log(this.userId)
+        console.log(this.file)
+     
+        var  post = {
+         
+          userId:this.userId,
+          message:this.message,
+          likes : 0,
+          usersLiked:[]
+        }
         
+        console.log (post)
         const postForm = new FormData();
-        postForm.append ("message", this.message);
+        postForm.append ("post", post);
         postForm.append ("image", this.file);
-        postForm.append ("userId", this.userId);
-        postForm.append ("likes", 0);
-        postForm.apprend ("userliked", [])
+        
+       
 
         axios
           .post("http://localhost:3000/api/posts/", postForm, header)
@@ -98,6 +111,7 @@ export default {
         this.errorMsg = "Merci d'insérer un post et une image"
       }
     },
+    
   },
 };
 </script>

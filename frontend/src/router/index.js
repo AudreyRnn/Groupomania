@@ -3,6 +3,7 @@ import { createWebHistory, createRouter } from "vue-router";
 
 import Login from "@/views/Login.vue";
 import Home from "@/views/Home.vue";
+import ModifyPost from"@/views/ModifyPost.vue";
 const routes = [
 {
     name: 'Login',
@@ -15,6 +16,11 @@ const routes = [
     component: Home, 
     props:true 
   },
+  {
+    name:'Modifier',
+    path:'/Modifier',
+    component:ModifyPost,
+  }
   
 ]
 
