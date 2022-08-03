@@ -10,6 +10,8 @@ const User = require("../models/User");
 // signup: enregistrement nouveaux users
 
 exports.signup = (req, res, next) => {
+
+
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
@@ -22,6 +24,7 @@ exports.signup = (req, res, next) => {
       // utilisation d'une regEx pour vérifier que l'input complété comprend un email valide
 
       if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(req.body.email)) {
+        
         return res
           .status(400)
           .json({ message: "merci de renseigner un email valide" });
@@ -30,7 +33,11 @@ exports.signup = (req, res, next) => {
       //Enregistrer les données de l'utilisateur dans la BDD
       user
         .save()
-        .then(() => res.status(201).json({ message: "utilisateur crée" }))
+        .then(
+          function(){
+            res.status(201).json({ message: "utilisateur crée" })
+          } 
+          )
         .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
@@ -46,6 +53,8 @@ exports.login = (req, res, next) => {
       .json({ message: "merci de renseigner un email valide" });
   }
 
+  console.log(req.body.email);
+
   User.findOne({ email: req.body.email }) // rechercher un user par rapport à son email unique
     .then((user) => {
       if (!user) {
@@ -58,13 +67,18 @@ exports.login = (req, res, next) => {
           if (!valid) {
             return res.status(401).json({ error: "Mot de passe incorrect" });
           }
+
           res.status(200).json({
             userId: user._id,
-            role: user.role, // si user trouvé on demande à renvoyer l'identifiant de l'utilisateur ds la base
-            token: jwt.sign({ userId: user._id }, process.env.SECRET_TOKEN, {
-              expiresIn: "24h",
-            }),
+            role: user.role,
+            token: jwt.sign(
+                { userId: user._id},
+                'RANDOM_TOKEN_SECRET',
+                { expiresIn: '24h'}
+            )
           });
+
+
         })
         .catch((error) => res.status(500).json({ error }));
     })
