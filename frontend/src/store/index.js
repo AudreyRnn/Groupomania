@@ -65,7 +65,7 @@ const store = createStore({
     login: ({commit}, userInfos) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
-        instance.post('auth/login', userInfos)
+        instance.post('http://localhost:3000/api/auth/login', userInfos)
         .then(function (response) {
           commit('setStatus', '');
           commit('logUser', response.data);
@@ -77,8 +77,30 @@ const store = createStore({
         });
       });
     },
-    createAccount: ({commit}, userInfos) => {
-      commit('setStatus', 'loading');
+    createAccount: ({commit}, user) => {
+
+      return new Promise((resolve, reject) => {
+        console.log(user);
+        commit('auth_request')
+        axios({url: 'http://localhost:3000/api/auth/signup', data: user, method: 'POST'})
+        .then(resp => {
+          const token = resp.data.token
+          const user = resp.data.user
+          localStorage.setItem('token', token)
+          axios.defaults.headers.common['Authorization'] = token
+          commit('auth_success', token, user)
+          resolve(resp)
+        })
+        .catch (err => {
+          commit('auth_error', err)
+          localStorage.removeItem('token')
+          reject(err)
+        })
+      })
+
+
+
+      /*commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
         commit;
         instance.post('auth/signup', userInfos)
@@ -90,7 +112,7 @@ const store = createStore({
           commit('setStatus', 'error_create');
           reject(error);
         });
-      });
+      });*/
     },
   
   }

@@ -5,9 +5,7 @@ const User = require("../models/User");
 
 //création d'un post
 exports.createPost = (req, res, next) => {
-  //const postObject = JSON.parse(req.body.post);
-  //const postObject = req.body;
-  //delete postObject._id; // suppression du faux id envoyé par le frontend
+ 
   const post = new Post({
     userId: req.body.userId,
     message: req.body.message,

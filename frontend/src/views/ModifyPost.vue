@@ -1,6 +1,6 @@
 <template>
 
-<section class="modify">
+<section class="post">
 <div class="modify__message">
     <textarea v-model="modifyMessage" type="text" aria-label="Modifier message"  name="modifyMessage" />
 </div>

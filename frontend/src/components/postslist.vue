@@ -21,7 +21,7 @@
             {{post.likes}}</div>
 
     <!-- si user ok ou user admin proposer modification ou supression du post -->
-      <!-- <div class="icons" v-if="post.userId == user || user.role == admin" > -->
+      <!-- <div class="icons" v-if="userId == post.userId|| user.role == admin" > -->
      
 
       <!--<router-link>

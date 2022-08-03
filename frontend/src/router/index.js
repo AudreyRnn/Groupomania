@@ -7,7 +7,7 @@ import ModifyPost from"@/views/ModifyPost.vue";
 const routes = [
 {
     name: 'Login',
-    path:'/Login',
+    path:'/login',
     component: Login,
   },
   { 
@@ -18,7 +18,7 @@ const routes = [
   },
   {
     name:'Modifier',
-    path:'/Modifier',
+    path:'/modifier',
     component:ModifyPost,
   }
   

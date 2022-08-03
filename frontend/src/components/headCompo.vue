@@ -1,81 +1,88 @@
 <template>
-<div>
-  <header class="header__log">
-    <div class="headernav">
-        <img src="../assets/Groupomania-ok.png" alt="Logo Groupomania"
-        class="headernav__logo">
-            <button id="logout__button"
-       class="headernav__button"
-      @click.prevent="Logout()">
-        <fa icon="right-from-bracket"/>
-      </button>
-    </div>
-  </header>
-</div>
+      <header class="header__log">
+      <div class="headernav">
+      <img
+        src="../assets/Groupomania-ok.png"
+        alt="Logo Groupomania"
+        class="headernav__logo"
+      />
+      </div>
+      <div class="ul__container">
+        <ul class="headernav__ul">
+          <li>
+            <router-link class="nav" to="/login" @click="logout">
+              <fa class="headernav__button" icon="right-from-bracket" />
+            </router-link>
+          </li>
+          <li>
+            <router-link class="nav" to="/modifier" >
+              <fa class="headernav__button" icon="coffee" />
+            </router-link>
+          </li>
+        </ul>
+      </div>
+    </header>
+  
 </template>
 
 <script>
-
 export default {
-    name:'headerlog',
-  components: {
-    
-  },
+  name: "headerlog",
+  components: {},
 
   methods: {
-    Logout() {
-      localStorage.clear();
-      this.$router.push('/login');
+    logout: function () {
+      this.$store.commit("logout");
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/sass/base';
-.header__log{
+@import "../assets/sass/base";
+.header__log {
+  display: flex;
+  flex-direction: column;
+  justify-content:space-between;
+  align-items:center;
+  height: 110px;
   background-color: $tertiary-color;
   border-radius: 0px 0px 10px 10px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  @include computer; @include tablet {
-    display:flex;
-    justify-content:center;
-  }
-  }
-.headernav{
+  @include computer;
+  @include tablet {
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-around;
+      }
+}
+.headernav {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content:center;
+  justify-content: center;
+  
+  &__logo {
+    width: 250px;
+    padding-top: 10px;
+     @include computer;
+  @include tablet {
+    padding:0;
+      }
+  }  
+}
 
-  &__logo{
-    width: 180px ;
-    margin: 10px;
-  }
-  &__button{
-    margin-right: 10px;
+.headernav__ul {
+    display: flex;
+    text-decoration: none;
+   gap:50px;
+   padding-bottom: 20px; @include computer;
+  @include tablet {
+    padding:0;
+      }
+      }
+
+  .headernav__button{
     color: #FD2D01;
-    border-radius: 5px;
     height: 30px;
-    width: 30px;
-  }
-}
-nav {
-  padding: 30px;
-  color: #FD2D01;
-  text-decoration: none;
-}
-
-nav a {
-  font-weight: bold;
-  color: #FFFF;
-  text-decoration: none;
-  padding: 10px 40px;
-}
-
-nav a.router-link-exact-active {
-  color: #FD2D01;
-  background-color: #FFFF;
-  border-radius: 5px;
 }
 </style>

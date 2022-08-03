@@ -3,7 +3,7 @@
     <div class="postscard create">
       <h1 class="postscard__title">Ajouter un post <fa icon="pen-to-square" /></h1>
 
-      <!-- <form method="post" id="form__add"> -->
+      <form method="post" id="form__add">
         <div class="form-row">
           <textarea
             aria-label="message de l'utilisateur"
@@ -30,7 +30,7 @@
         <button @click.prevent="createPost()" class="button" type="submit">
           Créer Post
         </button>
-      <!-- </form> -->
+      </form>
     </div>
   </section>
 </template>
@@ -76,26 +76,19 @@ export default {
         const AccessToken = user.token;
         const header = { headers: { 
           "Content-Type": "multipart/form-data",
-          authorization: "Bearer " + AccessToken , } };
+        authorization: "Bearer " + AccessToken , } };
         console.log(this.message)
         console.log(this.userId)
         console.log(this.file)
-     
-        var  post = {
-         
-          userId:this.userId,
-          message:this.message,
-          likes : 0,
-          usersLiked:[]
-        }
-        
-        console.log (post)
+       
         const postForm = new FormData();
-        postForm.append ("post", post);
+        postForm.append ("userId", this.userId);
+        postForm.append ("message", this.message);
+        postForm.append ("like", 0);
+        postForm.append ("usersLiked", []);
         postForm.append ("image", this.file);
         
-       
-
+        
         axios
           .post("http://localhost:3000/api/posts/", postForm, header)
           .then(function (response) {
@@ -116,7 +109,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style  lang="scss">
 @import "../assets/sass/base";
 
 .post {
