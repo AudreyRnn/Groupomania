@@ -6,7 +6,7 @@ const postSchema = mongoose.Schema({
   imageUrl: { type: String, required: true},
   likes: { type: Number, required: true },
   usersLiked: { type: Array, required: true },
-  // username: { type: String, required: true, },
+  // username: { type: String, required: true },
   date: { type: Date, default: Date.now },
 });
 

@@ -5,7 +5,9 @@ const User = require("../models/User");
 
 //création d'un post
 exports.createPost = (req, res, next) => {
- 
+  //const postObject = JSON.parse(req.body.post);
+  //const postObject = req.body;
+  //delete postObject._id; // suppression du faux id envoyé par le frontend
   const post = new Post({
     userId: req.body.userId,
     message: req.body.message,
@@ -30,14 +32,17 @@ exports.modifyPost = (req, res, next) => {
       if (post.userId == user._id || user.role == "admin") {
         const postObject = req.file
           ? {
-        ...JSON.parse(req.body.post),
-        imageUrl: `${req.protocol}://${req.get("host")}/images/${
-          req.file.filename
-        }`,
-      }
+              ...JSON.parse(req.body.post),
+              imageUrl: `${req.protocol}://${req.get("host")}/images/${
+                req.file.filename
+              }`,
+            }
           : { ...req.body };
 
-        Post.findByIdAndUpdate({ _id: req.params.id }, { ...postObject, _id: req.params.id })
+        Post.findByIdAndUpdate(
+          { _id: req.params.id },
+          { ...postObject, _id: req.params.id }
+        )
 
           .then((post) => {
             if (req.file) {
@@ -51,7 +56,10 @@ exports.modifyPost = (req, res, next) => {
       } else {
         res
           .status(401)
-          .json({ message: "Seuls le créateur du post ou un administrateur peuvent modifier les posts" });
+          .json({
+            message:
+              "Seuls le créateur du post ou un administrateur peuvent modifier les posts",
+          });
       }
     });
   });
@@ -72,11 +80,9 @@ exports.deletePost = (req, res, next) => {
               .catch((error) => res.status(400).json({ error }));
           });
         } else {
-          res
-            .status(401)
-            .json({
-              message: "Ce post doit être supprimé par son auteur ou un",
-            });
+          res.status(401).json({
+            message: "Ce post doit être supprimé par son auteur ou un",
+          });
         }
       })
       .catch((error) => res.status(500).json({ error }));
