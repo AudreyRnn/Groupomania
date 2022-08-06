@@ -25,7 +25,7 @@
             @click="likePost(post)" /> -->
           {{ post.likes }}
         </div >
-        <div class="footer__ul" v-if="userId == post.userId">
+        <div class="footer__ul" v-if="userId == post.userId || this.role == 'admin'">
         <!-- || role == admin -->
           <ul class="footernav__ul">
           <li >
