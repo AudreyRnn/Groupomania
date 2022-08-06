@@ -1,24 +1,17 @@
 <template>
- 
-  
-  <headCompo />
-  <createPost />
+<headCompo />
+ <welcomeUser />
   <postslist />
-
-
 </template>
 
 <script>
-
-
-
-import createPost from "@/components/createPost.vue";
 import postslist from "@/components/postslist.vue";
+import welcomeUser from "@/components/welcomeUser.vue";
 import headCompo from "@/components/headCompo.vue";
 
 
 export default {
-  name: 'Home',
+  name: "Home",
   // beforeCreate: function () {
   //   if (localStorage.getItem("user") == null || this.$store.state.user.userId == -1) {
   //     this.$router.push('/login');
@@ -26,16 +19,16 @@ export default {
   //   return;
   // },
   components: {
-   
-    createPost,
     postslist,
-    headCompo
-}
-}
-  
+    headCompo,
+    welcomeUser,
+  },
+};
 </script>
 
 <style lang="scss">
 
 
 </style>
+
+

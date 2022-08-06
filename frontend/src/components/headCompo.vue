@@ -7,18 +7,24 @@
         class="headernav__logo"
       />
       </div>
-      <div class="ul__container">
-        <ul class="headernav__ul">
+      <div class="ul__container" v-if="this.$store.state.user.userId !== -1">
+        <ul class="headernav__ul" >
+          <li>
+            <router-link class="nav" to="/" >
+              <fa class="headernav__button" icon="house" />
+            </router-link>
+          </li>
+           <li>
+            <router-link class="nav" to="/publish" >
+              <fa class="headernav__button" icon="pen-to-square" />
+            </router-link>
+          </li>
           <li>
             <router-link class="nav" to="/login" @click="logout">
               <fa class="headernav__button" icon="right-from-bracket" />
             </router-link>
           </li>
-          <li>
-            <router-link class="nav" to="/modifier" >
-              <fa class="headernav__button" icon="coffee" />
-            </router-link>
-          </li>
+         
         </ul>
       </div>
     </header>
@@ -26,10 +32,17 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: "headerlog",
   components: {},
-
+  data: function () {
+    return
+  },
+computed: {
+...mapState(['status'])
+},
   methods: {
     logout: function () {
       this.$store.commit("logout");
@@ -43,7 +56,6 @@ export default {
 .header__log {
   display: flex;
   flex-direction: column;
-  justify-content:space-between;
   align-items:center;
   height: 110px;
   background-color: $tertiary-color;
@@ -63,7 +75,7 @@ export default {
   
   &__logo {
     width: 250px;
-    padding-top: 10px;
+    padding-top: 5px;
      @include computer;
   @include tablet {
     padding:0;
@@ -74,15 +86,12 @@ export default {
 .headernav__ul {
     display: flex;
     text-decoration: none;
-   gap:50px;
-   padding-bottom: 20px; @include computer;
-  @include tablet {
-    padding:0;
-      }
+   gap:30px;
+
       }
 
   .headernav__button{
-    color: #FD2D01;
+    color:$primary-color;
     height: 30px;
 }
 </style>

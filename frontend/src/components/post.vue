@@ -1,7 +1,9 @@
 <template>
   <section class="post">
     <div class="postscard create">
-      <h1 class="postscard__title">Ajouter un post <fa icon="pen-to-square" /></h1>
+      <h1 class="postscard__title">
+        Bonjour {{ userInfos.username }} <fa icon="pen-to-square" />
+      </h1>
 
       <form method="post" id="form__add">
         <div class="form-row">
@@ -12,7 +14,6 @@
             class="form-row__input"
             type="text"
             placeholder="Votre message ici"
-                
           />
         </div>
 
@@ -37,9 +38,10 @@
 
 <script>
 import axios from "axios";
+import { mapState } from "vuex";
 
 export default {
-  name: "createPost",
+  name: "post",
   components: {},
   data() {
     return {
@@ -47,21 +49,42 @@ export default {
       imageUrl: "",
       likes: "",
       usersLiked: "",
+      username: "",
       errorMsg: "",
     };
   },
-  // récupérer les données dans le localstrorage 
+
+  // récupérer les données dans le localstrorage
+  // mounted() {
+  //   if (JSON.parse(localStorage.getItem ("user")).userId) {
+  //     this.userId = JSON.parse(localStorage.getItem ("user")).userId;
+  //   }
+  //   if (JSON.parse(localStorage.getItem ("user")).username) {
+  //     this.username = JSON.parse(localStorage.getItem ("user")).username;
+  //   }
+  // },
   mounted() {
-    if (JSON.parse(localStorage.getItem ("user")).userId) {
-      this.userId = JSON.parse(localStorage.getItem ("user")).userId;
-    }
-    if (JSON.parse(localStorage.getItem ("user")).username) {
-      this.username = JSON.parse(localStorage.getItem ("user")).username;
-    }
+    this.getUserId();
+    // this.getUserName();
+  },
+  computed: {
+    ...mapState(["userInfos"]),
   },
 
   methods: {
-    
+    // obtenir l'username depuis le LS
+    getUserName() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      this.username = user.username;
+      console.log(this.username);
+    },
+    //obtenir l'user Id depuis le LS
+    getUserId() {
+      const user = JSON.parse(localStorage.getItem("user"));
+      this.userId = user.userId;
+      console.log(this.userId);
+    },
+
     fileSelected() {
       this.file = this.$refs.file.files[0];
       this.newImage = URL.createObjectURL(this.file);
@@ -74,42 +97,41 @@ export default {
 
         const user = JSON.parse(localStorage.getItem("user"));
         const AccessToken = user.token;
-        const header = { headers: { 
-          "Content-Type": "multipart/form-data",
-        authorization: "Bearer " + AccessToken , } };
-        console.log(this.message)
-        console.log(this.userId)
-        console.log(this.file)
-       
+        const header = {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            authorization: "Bearer " + AccessToken,
+          },
+        };
+        console.log(this.message);
+        console.log(this.userId);
+        console.log(this.file);
+
         const postForm = new FormData();
-        postForm.append ("userId", this.userId);
-        postForm.append ("message", this.message);
-        postForm.append ("like", 0);
-        postForm.append ("usersLiked", []);
-        postForm.append ("image", this.file);
-        
-        
+        postForm.append("userId", this.userId);
+        postForm.append("message", this.message);
+        postForm.append("like", 0);
+        postForm.append("usersLiked", []);
+        postForm.append("image", this.file);
+
         axios
           .post("http://localhost:3000/api/posts/", postForm, header)
           .then(function (response) {
             // this.$touter.push("/home");
             console.log(response);
           })
-        .catch((error) => {
-          console.log(error.response.data)
-        })
-        
-      }
-      else {
-        this.errorMsg = "Merci d'insérer un post et une image"
+          .catch((error) => {
+            console.log(error.response.data);
+          });
+      } else {
+        this.errorMsg = "Merci d'insérer un post et une image";
       }
     },
-    
   },
 };
 </script>
 
-<style  lang="scss">
+<style lang="scss">
 @import "../assets/sass/base";
 
 .post {

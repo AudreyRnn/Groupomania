@@ -1,41 +1,39 @@
-import { createStore } from 'vuex'
+import { createStore } from "vuex";
 
-const axios = require('axios');
+const axios = require("axios");
 const instance = axios.create({
-  baseURL: 'http://localhost:3000/api/'
+  baseURL: "http://localhost:3000/api/",
 });
 
 // Récupérer user dans le local storage
-let user = localStorage.getItem('user');
+let user = localStorage.getItem("user");
 if (!user) {
- user = {
+  user = {
     userId: -1,
-    token: '',
-  }; 
+    token: "",
+    
+  };
 } else {
   try {
     user = JSON.parse(user);
-    instance.defaults.headers.common['Authorization'] = user.token;
+    instance.defaults.headers.common["Authorization"] = user.token;
   } catch (ex) {
     user = {
       userId: -1,
-      token: '',
+      token: "",
     };
   }
 }
 
-// nouvelles instances de store 
+// nouvelles instances de store
 const store = createStore({
   state: {
-    status: '',
-    user: {
-      userId: -1,
-      token: '',
-    },
-    userInfos : {
-      username:'',
-      email: '',
-      
+    status: "",
+    user:user,
+    userInfos: {
+      username:"",
+      email:"",
+      role:"",
     },
     
   },
@@ -44,78 +42,65 @@ const store = createStore({
       state.status = status;
     },
     logUser: function (state, user) {
-      instance.defaults.headers.common['Authorization'] = user.token;
-      localStorage.setItem('user', JSON.stringify(user));
+      instance.defaults.headers.common["Authorization"] = user.token;
+      localStorage.setItem("user", JSON.stringify(user));
       state.user = user;
     },
     userInfos: function (state, userInfos) {
       state.userInfos = userInfos;
     },
-    
+
     logout: function (state) {
       state.user = {
         userId: -1,
-        token: '',
-      }
-      localStorage.removeItem('user');
-    }
-    
+        token: "",
+      };
+      localStorage.removeItem("user");
+    },
   },
   actions: {
-    login: ({commit}, userInfos) => {
-      commit('setStatus', 'loading');
+    login: ({ commit }, userInfos) => {
+      commit("setStatus", "loading");
       return new Promise((resolve, reject) => {
-        instance.post('http://localhost:3000/api/auth/login', userInfos)
-        .then(function (response) {
-          commit('setStatus', '');
-          commit('logUser', response.data);
-          resolve(response);
-        })
-        .catch(function (error) {
-          commit('setStatus', 'error_login');
-          reject(error);
-        });
+        instance
+          .post("http://localhost:3000/api/auth/login", userInfos)
+          .then(function (response) {
+            commit("setStatus", "");
+            commit("logUser", response.data);
+            resolve(response);
+          })
+          .catch(function (error) {
+            commit("setStatus", "error_login");
+            reject(error);
+          });
       });
     },
-    createAccount: ({commit}, user) => {
-
+    createAccount: ({ commit }, userInfos) => {
       return new Promise((resolve, reject) => {
         console.log(user);
-        commit('auth_request')
-        axios({url: 'http://localhost:3000/api/auth/signup', data: user, method: 'POST'})
-        .then(resp => {
-          const token = resp.data.token
-          const user = resp.data.user
-          localStorage.setItem('token', token)
-          axios.defaults.headers.common['Authorization'] = token
-          commit('auth_success', token, user)
-          resolve(resp)
+        commit("auth_request");
+        axios({
+          url: "http://localhost:3000/api/auth/signup",
+          data: userInfos,
+          method: "POST",
         })
-        .catch (err => {
-          commit('auth_error', err)
-          localStorage.removeItem('token')
-          reject(err)
-        })
-      })
-
-
-
-      /*commit('setStatus', 'loading');
-      return new Promise((resolve, reject) => {
-        commit;
-        instance.post('auth/signup', userInfos)
-        .then(function (response) {
-          commit('setStatus', 'created');
-          resolve(response);
-        })
-        .catch(function (error) {
-          commit('setStatus', 'error_create');
-          reject(error);
-        });
-      });*/
+          .then((resp) => {
+            const token = resp.data.token;
+            const user = resp.data.user;
+            localStorage.setItem("token", token);
+            axios.defaults.headers.common["Authorization"] = token;
+            commit("auth_success", token, user);
+            resolve(resp);
+          })
+          .catch((err) => {
+            commit("auth_error", err);
+            localStorage.removeItem("token");
+            reject(err);
+          });
+      });
     },
-  
-  }
-})
+    
+    
+  },
+});
 export default store;
-

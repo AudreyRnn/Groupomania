@@ -1,5 +1,5 @@
 <template>
-<headerCompo />
+<headCompo />
 <div class="welcome">
 <h1 class="welcome__title">Bienvenue sur le réseau social de votre entreprise! Gardez le lien avec vos collègues</h1>
 </div>
@@ -9,14 +9,14 @@
 
 <script>
 import loginCompo from "@/components/loginCompo.vue";
-import headerCompo from "@/components/headerCompo.vue";
+import headCompo from "@/components/headCompo.vue";
 import footerCompo from "@/components/footerCompo.vue";
 
 export default {
     name: 'Login',
     components :{
         loginCompo,
-        headerCompo,
+        headCompo,
         footerCompo,
     },
 };
