@@ -25,13 +25,14 @@
             @click="likePost(post)" /> -->
           {{ post.likes }}
         </div >
-        <div class="footer__ul" v-if="userId == post.userId || this.role == 'admin'">
-        <!-- || role == admin -->
+        <div class="footer__ul" >
           <ul class="footernav__ul">
           <li >
             <router-link class="nav" to="/modifier">
             <!-- :to="{name:'modifier',params:{id:post._id}} -->
-              <fa   class="footernav__btn" icon="pen-to-square" />
+              <fa  v-if="userId == post.userId || this.role == 'admin'" @click="upDatePost(post)" 
+              class="footernav__btn"
+               icon="pen-to-square" />
             </router-link>
           </li>
           <li>
@@ -112,7 +113,11 @@ computed: {
         .catch((error) => console.log(error));
     },
     // mofifier un post 
-
+      upDatePost (post) {
+        const IdPostToUpdate = {'postId': post._id}
+        localStorage.setItem('postToUpdate',JSON.stringify(IdPostToUpdate))
+        this.$router.push('/modifier')
+      }
    
 
 
