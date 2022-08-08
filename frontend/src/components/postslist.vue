@@ -4,7 +4,7 @@
     <article class="postscard" v-for="post in posts" :key="post._id">
       <!--  -->
       <header class="postscard__header">
-        <div class="postscard__title">{{ userInfos.username }} username</div>
+        <div class="postscard__title">{{ post.userId }} username</div>
         <div class="postscard__time">{{ post.date }}</div>
       </header>
       <div class="postscard__body">
@@ -29,15 +29,15 @@
           <ul class="footernav__ul">
           <li >
             <router-link class="nav" to="/modifier">
-            <!-- :to="{name:'modifier',params:{id:post._id}} -->
-              <fa  v-if="userId == post.userId || this.role == 'admin'" @click="upDatePost(post)" 
+            
+              <fa v-if="userId == post.userId || this.role == 'admin'"  @click="upDatePost(post)" 
               class="footernav__btn"
                icon="pen-to-square" />
             </router-link>
           </li>
           <li>
            
-              <fa @click="deletePost()" class="footernav__btn" icon="ban" />
+              <fa v-if="userId == post.userId || this.role == 'admin'" @click="deletePost(post)" class="footernav__btn footernav__btn-delete" icon="ban" />
            
           </li>
           </ul>
@@ -112,41 +112,44 @@ computed: {
         })
         .catch((error) => console.log(error));
     },
-    // mofifier un post 
+    // mofifier un post -- envoi vers la page modifier 
       upDatePost (post) {
         const IdPostToUpdate = {'postId': post._id}
         localStorage.setItem('postToUpdate',JSON.stringify(IdPostToUpdate))
         this.$router.push('/modifier')
-      }
-   
-
-
+      },
+  
     // supression d'un post
 
-    // deletePost(post) {
-    //   const user = JSON.parse(localStorage.getItem('user'));
-    //   const AccessToken = user.token;
+    deletePost(post) {
+    // demande de confirmation de la suppression du post 
+  if (window.confirm ('Voulez-vous vraiment supprimer votre publication?')){
+    // récupération des données dans le LS 
+      const user = JSON.parse(localStorage.getItem("user"));
+      const AccessToken = user.token;
+     this.userId = post.userId;
+      const header = { headers: { Authorization: "Bearer " + AccessToken } };
+      const admin = this.role
+      if (this.userId === this.post.userId || admin) {
+      axios
+      .delete('http://localhost:3000/api/posts/' + post._id, header)
+      .then (() => {
+        window.alert ('publication supprimée')
+        window.location.reload()
+      })
+      .catch((error)=> {
+        console.log(error.response.data)
+      })
+      } else {
+        window.alert ("Vous n'êtes pas autorisé(e) à supprimer cette publication")
+      }
+  }
 
-    //     const header = { headers: { 
-    //       "Content-Type": "multipart/form-data",
-    //     authorization: "Bearer " + AccessToken , } };
-
-    // axios
-    // .delete('http://localhost:3000/api/posts/' + post._id, header )
-    // .then ((response) =>{
-    //   console.log('deletePost response');
-    //   console.log(response.data.post);
-    // })
-    // .then (() => {
-    //   this.getAllPosts();
-    // })
-    // .catch((error) =>{
-    //   console.log('error deletePost');
-    //   console.log(error);
-    // });
-    // },
+   
   },
-};
+}
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -222,5 +225,7 @@ computed: {
 .footernav__btn{
   color: $primary-color;
 }
-
+.footernav__btn-delete{
+  cursor: pointer;
+}
 </style>
