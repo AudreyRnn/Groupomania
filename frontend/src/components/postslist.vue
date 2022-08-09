@@ -3,7 +3,7 @@
     <article class="postscard" v-for="post in posts" :key="post._id">
       <!--  -->
       <header class="postscard__header">
-        <div class="postscard__title">{{ post.username }}</div>
+        <div class="postscard__title">{{ post.username }}username</div>
         <div class="postscard__time">{{ post.date }}</div>
       </header>
       <div class="postscard__body">
