@@ -32,7 +32,8 @@ exports.modifyPost = (req, res, next) => {
       if (post.userId == user._id || user.role == "admin") {
         const postObject = req.file
           ? {
-              ...JSON.parse(req.body.post),
+            
+             message:req.body.message,
               imageUrl: `${req.protocol}://${req.get("host")}/images/${
                 req.file.filename
               }`,
