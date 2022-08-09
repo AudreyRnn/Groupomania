@@ -28,7 +28,7 @@
           <img :src="post.imageUrl" alt="photo du post" class="mofify__file-img" />
         </div>
 
-        <button @click.prevent="updatePost()" class="button" type="submit">
+        <button @click.prevent="UpdatePost()" class="button" type="submit">
           Modifier
         </button>
         <div v-show="errorMsg">{{ errorMsg }}</div>
@@ -95,7 +95,7 @@ export default {
       const editPost = new FormData();
       editPost.append("userId", this.userId);
       editPost.append("message", this.post.message);
-      editPost.append("likes", post.likes), editPost.append("usersLiked", []);
+  
       editPost.append("image", this.file);
 
       if (this.message !== null || this.file !== null) {
