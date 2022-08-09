@@ -18,13 +18,17 @@
       </div>
       <!-- bouton like à gérer une fois icones import -->
       <footer class="postscard__footer">
-        <div class="footer__like">
+        <div class="like">
+          <button class="like__btn">
           <fa v-if="verifIfLiked(post)" 
           @click="likePost(post)" 
-          class="like__btn" 
+          class="like__icon" 
           icon="thumbs-up" />
-          {{ post.likes }}
-        </div>
+          </button>
+          <span>{{ post.likes }}</span>
+          </div>
+          
+        
         <div class="footer__ul">
           <ul class="footernav__ul">
             <li>
@@ -246,14 +250,32 @@ export default {
   flex-direction: row;
   justify-content: space-between;
 }
-.footer__like {
+.like {
   display: flex;
   align-items: center;
   padding-left: 10px;
   padding-bottom: 10px;
+  gap: 20px;
+  &__btn{
+    border:none;
+    background:none;
+  }
+    &__icon
+  {
+    font-size: 20px;
+  }
 }
-.like__btn {
-  font-size: 20px;
+.like__btn:hover{
+  .like__icon{
+    color:$primary-color;
+    cursor:pointer;
+  }
+}
+.like__btn:focus{
+  .like__icon{
+    color:$primary-color;
+    cursor:pointer;
+  }
 }
 .footernav__ul {
   display: flex;
